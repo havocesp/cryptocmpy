@@ -3,7 +3,9 @@
 Core module.
 
 """
+import collections as col
 import pprint
+import typing as tp
 
 import requests
 
@@ -65,10 +67,11 @@ class CryptoCmp:
 
         for param in ['tsyms', 'fsyms']:
             if param in params:
-                if isinstance(params[param]):
-                    params[param] = [params[param]]
-                params[param] = [s.upper() for s in params[param]]
-                params[param] = ','.join(params[param])
+                param_value = params.get(param)
+                if isinstance(param_value, str) and ',' not in param:
+                    params[param] = [param_value]
+                if isinstance(param_value, col.Iterable):
+                    params[param] = ','.join([str(s).upper() for s in param_value])
 
         return params
 
@@ -107,7 +110,7 @@ class CryptoCmp:
 
         if response.ok:
             raw = response.json()
-            return raw.get('Data', raw)
+            return raw.get('Data', raw) if raw.get('Response') != 'Error' else {'Error': raw.get('Message')}
         else:
             response.raise_for_status()
 
@@ -129,12 +132,17 @@ class CryptoCmp:
     @classmethod
     def get_price(cls, fsym, *tsyms):
         """
-        Price conversion (one to many) from "fsym" to "fsyms"
+        Price conversion (one to many) from "fsym" currency to "tsyms" currencies.
+
+        >>> data = CryptoCmp.get_price('BTC', 'ETH', 'USD', 'EUR')
+        >>> isinstance(data, dict)
+        True
+        >>> all((isinstance(v, float) for v in data.values()))
+        True
 
         :param fsym: from currency.
         :type fsym: str
-        :param tsyms:  to currencies.
-        :type tsyms: list
+        :param tsyms: "to" currencies.
         :return: conversion data result.
         :rtype: dict
         """
@@ -143,10 +151,32 @@ class CryptoCmp:
     @classmethod
     def get_coin_list(cls):
         """
-        Return currencies as list of dict containing some metadata.
+        Returns a dict of dicts containing all currencies metadata.
+
+        >>> data = CryptoCmp.get_coin_list()
+        >>> isinstance(data, dict)
+        True
+
+        ... {'Id': '925807',
+        ... 'Url': '/coins/csp/overview',
+        ... 'ImageUrl': '/media/34478535/csp.png',
+        ... 'Name': 'CSP',
+        ... 'Symbol': 'CSP',
+        ... 'CoinName': 'Caspian',
+        ... 'FullName': 'Caspian (CSP)',
+        ... 'Algorithm': 'N/A',
+        ... 'ProofType': 'N/A',
+        ... 'FullyPremined': '0',
+        ... 'TotalCoinSupply': '1000000000',
+        ... 'BuiltOn': '7605',
+        ... 'SmartContractAddress': '0xA6446D655a0c34bC4F05042EE88170D056CBAf45',
+        ... 'PreMinedValue': 'N/A',
+        ... 'TotalCoinsFreeFloat': 'N/A',
+        ... 'SortOrder': '3381',
+        ... 'Sponsored': False}
 
         :return: list of crypto currencies with some metadata as dict.
-        :rtype: list
+        :rtype: dict
         """
         return cls._query(COIN_LIST_URL)
 
@@ -262,7 +292,7 @@ class CryptoCmp:
         Get crypto coin historic price at "sts" timestamp.
 
         :param fsym: from symbol.
-        :type fsym: str
+        :type fsym: tp.AnyStr
         :param tsyms:
         :type tsyms:
         :param ts:
@@ -285,8 +315,4 @@ class CryptoCmp:
 
 
 if __name__ == '__main__':
-    cmd = Base()
-    # result = cmd.get_day('BTC', 'USD', toTs=1512065120)
-    by_exchange_coinlist = cmd.get_exchanges_list('Binance', 'USDT')
-
-    pprint.pprint(by_exchange_coinlist)
+    print(CryptoCmp.get_coin_list())
