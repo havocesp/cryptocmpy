@@ -3,7 +3,7 @@
 - **Author**: `Daniel J. Umpierrez`
 - **Site**: [https://github.com/havocesp/cryptocmp](https://github.com/havocesp/cryptocmp)
 - **License**: `MIT`
-- **Version**: `0.1.0`
+- **Version**: `0.1.1`
 
 # Decription
 Just another Python 3 "**CryptoCompare**" API wrapper.
@@ -16,7 +16,7 @@ Just another Python 3 "**CryptoCompare**" API wrapper.
 
 ## _GitHub_ repository (using `pip`)
 
-`pip install git+https://github.com/havocesp/cryptocmp`
+`$ pip install git+https://github.com/havocesp/cryptocmp`
 
 # Usage
 
@@ -41,6 +41,10 @@ print(historic_price)
 ```
 
 ## Changelog
+
+### 0.1.1
+- Removed _utils.py_ module
+- Minor fixes
 
 ### 0.1.0
  - Initial version
