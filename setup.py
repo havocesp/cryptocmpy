@@ -1,25 +1,24 @@
 # -*- coding:utf-8 -*-
 from setuptools import setup, find_packages
 
-from cryptocmp import (__version__, __author__, __description__, __site__, __email__, __license__, __keywords__,
-                       __package__)
+import cryptocmp as ccmp
 
 exclude = ['.idea*', 'build*', '{}.egg-info*'.format(__package__), 'dist*', 'venv*', 'doc*', 'lab*']
 
 setup(
-    name=__package__,
-    version=__version__,
+    name=ccmp.__package__,
+    version=ccmp.__version__,
     packages=find_packages(exclude=exclude),
-    url=__site__,
-    license=__license__,
-    packages_dir={'': __package__},
-    keywords=__keywords__,
-    author=__author__,
-    author_email=__email__,
-    long_description=__description__,
-    description=__description__,
+    url=ccmp.__site__,
+    license=ccmp.__license__,
+    packages_dir={'': ccmp.__package__},
+    keywords=ccmp.__keywords__,
+    author=ccmp.__author__,
+    author_email=ccmp.__email__,
+    long_description=ccmp.__description__,
+    description=ccmp.__description__,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
