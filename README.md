@@ -2,7 +2,7 @@
 
 - **Author**: `Daniel J. Umpierrez`
 - **Site**: [https://github.com/havocesp/cryptocmp](https://github.com/havocesp/cryptocmp)
-- **License**: `MIT`
+- **License**: `UNLICENSE`
 - **Version**: `0.1.1`
 
 # Decription
