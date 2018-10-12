@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 """
-Core module.
-
+Cyptocmp core module.
 """
 import collections as col
 import pprint
@@ -9,37 +8,36 @@ import typing as tp
 
 import requests
 
-DEBUG = False
+_DEBUG = False
 
-COIN_LIST_URL = '{schema}://www.{domain}/api/data/coinlist/'
+_COIN_LIST_URL = '{schema}://www.{domain}/api/data/coinlist/'
 # noinspection PyUnusedName
-COIN_SNAPSHOT_FULL_BY_ID_URL = '{schema}://www.{domain}/api/data/coinsnapshotfullbyid/?id='
+_COIN_SNAPSHOT_FULL_BY_ID_URL = '{schema}://www.{domain}/api/data/coinsnapshotfullbyid/?id='
 # noinspection PyUnusedName
-COIN_SNAPSHOT_URL = '{schema}://www.{domain}/api/data/coinsnapshot/'
+_COIN_SNAPSHOT_URL = '{schema}://www.{domain}/api/data/coinsnapshot/'
 
-PRICE_URL = '{schema}://min-api.{domain}/data/price'
+_PRICE_URL = '{schema}://min-api.{domain}/data/price'
+_PRICE_MULTI_URL = '{schema}://min-api.{domain}/data/pricemulti'
 # noinspection PyUnusedName
-PRICE_MULTI_URL = '{schema}://min-api.{domain}/data/pricemulti'
+_PRICE_MULTI_FULL_URL = '{schema}://min-api.{domain}/data/pricemultifull'
+_PRICE_HISTORICAL_URL = '{schema}://min-api.{domain}/data/pricehistorical'
 # noinspection PyUnusedName
-PRICE_MULTI_FULL_URL = '{schema}://min-api.{domain}/data/pricemultifull'
-PRICE_HISTORICAL_URL = '{schema}://min-api.{domain}/data/pricehistorical'
-# noinspection PyUnusedName
-GENERATE_AVG_URL = '{schema}://min-api.{domain}/data/generateAvg'
-DAY_AVG_URL = '{schema}://min-api.{domain}/data/dayAvg'
+_GENERATE_AVG_URL = '{schema}://min-api.{domain}/data/generateAvg'
+_DAY_AVG_URL = '{schema}://min-api.{domain}/data/dayAvg'
 
-SUBS_WATCH_LIST_URL = '{schema}://min-api.{domain}/data/subsWatchlist'
-SUBS_URL = '{schema}://min-api.{domain}/data/subs'
+_SUBS_WATCH_LIST_URL = '{schema}://min-api.{domain}/data/subsWatchlist'
+_SUBS_URL = '{schema}://min-api.{domain}/data/subs'
 # noinspection PyUnusedName
 ALL_EXCHANGES_URL = '{schema}://min-api.{domain}/data/all/exchanges'
 # noinspection PyUnusedName
-TOP_EXCHANGES_URL = '{schema}://min-api.{domain}/data/top/exchanges'
+_TOP_EXCHANGES_URL = '{schema}://min-api.{domain}/data/top/exchanges'
 # noinspection PyUnusedName
-TOP_VOLUMES_URL = '{schema}://min-api.{domain}/data/top/volumes'
-TOP_PAIRS_URL = '{schema}://min-api.{domain}/data/top/pairs'
+_TOP_VOLUMES_URL = '{schema}://min-api.{domain}/data/top/volumes'
+_TOP_PAIRS_URL = '{schema}://min-api.{domain}/data/top/pairs'
 
-HIST_DAY_URL = '{schema}://min-api.{domain}/data/histoday'
-HIST_HOUR_URL = '{schema}://min-api.{domain}/data/histohour'
-HIST_MINUTE_URL = '{schema}://min-api.{domain}/data/histominute'
+_HIST_DAY_URL = '{schema}://min-api.{domain}/data/histoday'
+_HIST_HOUR_URL = '{schema}://min-api.{domain}/data/histohour'
+_HIST_MINUTE_URL = '{schema}://min-api.{domain}/data/histominute'
 # noinspection PyUnusedName
 SOCIAL_STATS_URL = '{schema}://www.{domain}/api/data/socialstats?id='
 # noinspection PyUnusedName
@@ -81,9 +79,9 @@ class CryptoCmp:
         Return base URL.
 
         :param template: template URL
-        :type template: str
+        :type template: tp.AnyStr
         :return: filled template URL as str
-        :rtype: str
+        :rtype: tp.AnyStr
         """
         return template.format(**cls._BASE)
 
@@ -93,7 +91,7 @@ class CryptoCmp:
         Send query to server and return response.
 
         :param url: URL template.
-        :type url:str
+        :type url: tp.AnyStr
         :param params: parameters used to build URL request.
         :type params: dict
         :return:
@@ -102,7 +100,12 @@ class CryptoCmp:
         params = params or dict()
         url = url.format(**cls._BASE)
 
-        if DEBUG:
+        if 'cls' in params:
+            del params['cls']
+        if 'self' in params:
+            del params['self']
+
+        if _DEBUG:
             print(url)
             pprint.pprint(cls._params(params))
 
@@ -120,33 +123,49 @@ class CryptoCmp:
         TODO
 
         :param fsym: from symbol.
-        :type fsym: str
+        :type fsym: tp.AnyStr
         :param tsym: to symbol.
-        :type tsym: str
+        :type tsym: tp.AnyStr
         :param int limit: default 5, max 50, min 1
         :return:
         :rtype dict:
         """
-        return cls._query(TOP_PAIRS_URL, locals())
+        return cls._query(_TOP_PAIRS_URL, locals())
 
     @classmethod
-    def get_price(cls, fsym, *tsyms):
+    def get_price(cls, fsyms, tsyms):
+        # noinspection PyUnresolvedReferences
         """
         Price conversion (one to many) from "fsym" currency to "tsyms" currencies.
 
-        >>> data = CryptoCmp.get_price('BTC', 'ETH', 'USD', 'EUR')
+        >>> data = CryptoCmp.get_price(fsyms='BTC', tsyms=('ETH', 'USD', 'EUR'))
         >>> isinstance(data, dict)
         True
         >>> all((isinstance(v, float) for v in data.values()))
         True
+        >>> data = CryptoCmp.get_price(('BTC', 'ETH', 'XRP', 'ADA'), ('USD', 'EUR'))
+        >>> isinstance(data, dict)
+        True
+        >>> isinstance(data['total'], float)
+        True
 
-        :param fsym: from currency.
-        :type fsym: str
-        :param tsyms: "to" currencies.
+        :param fsyms: from currencies.
+        :type fsyms: tp.Iterable[tp.AnyStr]
+        :param tp.Iterable[tp.AnyStr] tsyms: "to" currencies.
         :return: conversion data result.
-        :rtype: dict
+        :rtype: tp.Dict
         """
-        return cls._query(PRICE_URL, locals())
+        if isinstance(fsyms, str):
+            fsyms = [fsyms]
+        if isinstance(tsyms, str):
+            tsyms = [tsyms]
+
+        if len(fsyms) == 1 and len(tsyms) >= 1:
+            fsym = str(fsyms[0])
+            del fsyms
+            return cls._query(_PRICE_URL, locals())
+        elif len(fsyms) > 1 and len(tsyms) >= 1:
+            return cls._query(_PRICE_MULTI_URL, locals())
 
     @classmethod
     def get_coin_list(cls):
@@ -175,17 +194,17 @@ class CryptoCmp:
         ... 'SortOrder': '3381',
         ... 'Sponsored': False}
 
-        :return: list of crypto currencies with some metadata as dict.
-        :rtype: dict
+        :return: all crypto currencies with some metadata as dict.
+        :rtype: tp.Dict[tp.AnyStr, tp.Dict]
         """
-        return cls._query(COIN_LIST_URL)
+        return cls._query(_COIN_LIST_URL)
 
     @classmethod
     def get_exchanges_list(cls, exchange=None, base_market=None):
         """
         Return exchanges as list of dict containing some metadata.
 
-        :return: list of crypto exchanges with some metadata as dict.
+        :return: all crypto exchanges with their metadata as dict.
         :rtype: dict
         """
         raw = cls._query(ALL_EXCHANGES_URL)
@@ -201,26 +220,26 @@ class CryptoCmp:
         """
 
         :param fsym: from currency.
-        :type fsym: str
+        :type fsym: tp.AnyStr
         :param tsym: to currency.
-        :type tsym: str
+        :type tsym: tp.AnyStr
         :return: dict with day average data.
         :rtype: dict
         """
-        return cls._query(DAY_AVG_URL, locals())
+        return cls._query(_DAY_AVG_URL, locals())
 
     @classmethod
     def get_watchlist(cls, tsym, *fsyms):
         """
 
         :param tsym: to currency.
-        :rtype tsym: str
+        :rtype tsym: tp.AnyStr
         :param fsyms: from currencies.
         :rtype fsyms: list
         :return:
         :rtype:
         """
-        return cls._query(SUBS_WATCH_LIST_URL, locals())
+        return cls._query(_SUBS_WATCH_LIST_URL, locals())
 
     @classmethod
     def get_subs(cls, fsym):
@@ -228,18 +247,18 @@ class CryptoCmp:
         TODO
 
         :param fsym: from currency.
-        :rtype fsym: str
+        :rtype fsym: tp.AnyStr
         :return:
         :rtype:
         """
-        return cls._query(SUBS_URL, locals())
+        return cls._query(_SUBS_URL, locals())
 
     @classmethod
     def get_day(cls, fsym, tsym, allData=False, toTs=None):
         """
 
         :param fsym: from symbol.
-        :type fsym: str
+        :type fsym: tp.AnyStr
         :param tsym:
         :param allData:
         :param toTs:
@@ -250,7 +269,7 @@ class CryptoCmp:
         # if toTs:
         #     params.update(toTs=toTs)
 
-        return cls._query(HIST_DAY_URL, locals())
+        return cls._query(_HIST_DAY_URL, locals())
 
     @classmethod
     def get_hour(cls, fsym, tsym, limit=168, toTs=None):
@@ -258,15 +277,15 @@ class CryptoCmp:
         Get OHLC (day candles size)
 
         :param tsym:
-        :type fsym: str
+        :type fsym: tp.AnyStr
         :param fsym: from symbol.
-        :type fsym: str
+        :type fsym: tp.AnyStr
         :param limit:
         :type toTs: int
         :return:
         :rtype: list
         """
-        return cls._query(HIST_HOUR_URL, locals())
+        return cls._query(_HIST_HOUR_URL, locals())
 
     @classmethod
     def get_minute(cls, fsym, tsym, limit=1440, toTs=None):
@@ -274,9 +293,9 @@ class CryptoCmp:
         Get OHLC (minute candles size)
 
         :param fsym: from symbol.
-        :type fsym: str
+        :type fsym: tp.AnyStr
         :param tsym:
-        :type fsym: str
+        :type fsym: tp.AnyStr
         :param limit:
         :type limit: int
         :param toTs:
@@ -284,7 +303,7 @@ class CryptoCmp:
         :return:
         :rtype: list
         """
-        return cls._query(HIST_MINUTE_URL, locals())
+        return cls._query(_HIST_MINUTE_URL, locals())
 
     @classmethod
     def get_historical_price(cls, fsym, ts, *tsyms):
@@ -300,19 +319,15 @@ class CryptoCmp:
         :return:
         :rtype:
         """
-        return cls._query(PRICE_HISTORICAL_URL, locals())
+        return cls._query(_PRICE_HISTORICAL_URL, locals())
 
     @classmethod
     def get_generate_average(cls, fsym, tsym, markets):
         """
 
-        :param fsym:
-        :param tsym:
+        :param tp.AnyStr fsym:
+        :param tp.AnyStr tsym:
         :param markets:
         :return:
         """
-        return cls._query(GENERATE_AVG_URL, locals())
-
-
-if __name__ == '__main__':
-    print(CryptoCmp.get_coin_list())
+        return cls._query(_GENERATE_AVG_URL, locals())
