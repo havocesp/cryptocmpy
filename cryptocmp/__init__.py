@@ -10,7 +10,7 @@ __project__ = 'CryptoCmp'
 __package__ = 'cryptocmp'
 
 __author__ = 'Daniel J. Umpierrez'
-__license__ = 'MIT'
+__license__ = 'UNLICENSE'
 __version__ = '0.1.1'
 
 __description__ = __doc__
