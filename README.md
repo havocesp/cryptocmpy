@@ -5,7 +5,7 @@
 - **License**: `MIT`
 - **Version**: `0.1.1`
 
-# Decription
+# Description
 Just another Python 3 "**CryptoCompare**" API wrapper.
 
 # Requirements
