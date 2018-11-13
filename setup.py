@@ -1,22 +1,22 @@
 # -*- coding:utf-8 -*-
 from setuptools import setup, find_packages
 
-import cryptocmpy as ccmp
+import cryptocmpy as ccmpy
 
 exclude = ['.idea*', 'build*', '{}.egg-info*'.format(__package__), 'dist*', 'venv*', 'doc*', 'lab*']
 
 setup(
-    name=ccmp.__package__,
-    version=ccmp.__version__,
+    name=ccmpy.__package__,
+    version=ccmpy.__version__,
     packages=find_packages(exclude=exclude),
-    url=ccmp.__site__,
-    license=ccmp.__license__,
-    packages_dir={'': ccmp.__package__},
-    keywords=ccmp.__keywords__,
-    author=ccmp.__author__,
-    author_email=ccmp.__email__,
-    long_description=ccmp.__description__,
-    description=ccmp.__description__,
+    url=ccmpy.__site__,
+    license=ccmpy.__license__,
+    packages_dir={'': ccmpy.__package__},
+    keywords=ccmpy.__keywords__,
+    author=ccmpy.__author__,
+    author_email=ccmpy.__email__,
+    long_description=ccmpy.__description__,
+    description=ccmpy.__description__,
     classifiers=[
         'Development Status :: 5 - Production',
         'License :: OSI Approved :: MIT License',

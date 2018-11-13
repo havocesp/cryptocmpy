@@ -11,7 +11,7 @@ __package__ = 'cryptocmpy'
 
 __author__ = 'Daniel J. Umpierrez'
 __license__ = 'UNLICENSE'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 __description__ = __doc__
 

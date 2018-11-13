@@ -3,7 +3,7 @@
 - **Author**: `Daniel J. Umpierrez`
 - **Site**: [https://github.com/havocesp/cryptocmpy](https://github.com/havocesp/cryptocmpy)
 - **License**: `UNLICENSE`
-- **Version**: `0.1.1`
+- **Version**: `0.1.2`
 
 # Description
 Just another Python 3 "**CryptoCompare**" API wrapper.
@@ -41,6 +41,9 @@ print(historic_price)
 ```
 
 ## Changelog
+
+### 0.1.2
+- Project name changed to Cryptocmpy (Cryptocmp was already taken at pypi.org)
 
 ### 0.1.1
 - Removed _utils.py_ module
