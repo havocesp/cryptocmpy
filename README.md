@@ -1,7 +1,7 @@
-# CryptoCmp
+# CryptoCmpy
 
 - **Author**: `Daniel J. Umpierrez`
-- **Site**: [https://github.com/havocesp/cryptocmp](https://github.com/havocesp/cryptocmp)
+- **Site**: [https://github.com/havocesp/cryptocmpy](https://github.com/havocesp/cryptocmpy)
 - **License**: `UNLICENSE`
 - **Version**: `0.1.1`
 
@@ -16,13 +16,13 @@ Just another Python 3 "**CryptoCompare**" API wrapper.
 
 ## _GitHub_ repository (using `pip`)
 
-`$ pip install git+https://github.com/havocesp/cryptocmp`
+`$ pip install git+https://github.com/havocesp/cryptocmpy`
 
 # Usage
 
 ```python
 import time
-from cryptocmp import CryptoCmp
+from cryptocmpy import CryptoCmpy
 
 # amount of seconds calculation for 1 day
 day2seconds = 3600 * 24
@@ -32,7 +32,7 @@ epoch = int(time.time())
 # from 3 days ago to now as unix epoch
 since = epoch - (day2seconds * 3)
 
-cmp = CryptoCmp()
+cmp = CryptoCmpy()
 
 historic_price = cmp.get_historical_price('BTC', since, 'EUR', 'USD')
 

@@ -1,7 +1,3 @@
-.idea/markdown-navigator.xml
-.idea/markdown-navigator/
-.idea/serialmonitor_settings.xml
-.idea/vcs.xml
-.idea/workspace.xml
-cryptocmp.egg-info/
-cryptocmp/__pycache__/
+.idea
+cryptocmpy.egg-info
+cryptocmpy/__pycache__

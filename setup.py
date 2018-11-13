@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from setuptools import setup, find_packages
 
-import cryptocmp as ccmp
+import cryptocmpy as ccmp
 
 exclude = ['.idea*', 'build*', '{}.egg-info*'.format(__package__), 'dist*', 'venv*', 'doc*', 'lab*']
 

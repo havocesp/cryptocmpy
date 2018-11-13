@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 """
-Cyptocmp core module.
+Cyptocmpy core module.
 """
 import collections as col
 import pprint
@@ -27,8 +27,8 @@ _DAY_AVG_URL = '{schema}://min-api.{domain}/data/dayAvg'
 
 _SUBS_WATCH_LIST_URL = '{schema}://min-api.{domain}/data/subsWatchlist'
 _SUBS_URL = '{schema}://min-api.{domain}/data/subs'
-# noinspection PyUnusedName
-ALL_EXCHANGES_URL = '{schema}://min-api.{domain}/data/all/exchanges'
+
+_ALL_EXCHANGES_URL = '{schema}://min-api.{domain}/data/all/exchanges'
 # noinspection PyUnusedName
 _TOP_EXCHANGES_URL = '{schema}://min-api.{domain}/data/top/exchanges'
 # noinspection PyUnusedName
@@ -47,7 +47,7 @@ MINING_EQUIPMENT_URL = '{schema}://www.{domain}/api/data/miningequipment/'
 
 
 # noinspection PyUnusedFunction,PyPep8Naming,PySameParameterValue
-class CryptoCmp:
+class CryptoCmpy:
     """
     Contains all API urls.
     """
@@ -74,27 +74,13 @@ class CryptoCmp:
         return params
 
     @classmethod
-    def _url(cls, template):
-        """
-        Return base URL.
-
-        :param template: template URL
-        :type template: tp.AnyStr
-        :return: filled template URL as str
-        :rtype: tp.AnyStr
-        """
-        return template.format(**cls._BASE)
-
-    @classmethod
     def _query(cls, url, params=None):
         """
         Send query to server and return response.
 
-        :param url: URL template.
-        :type url: tp.AnyStr
-        :param params: parameters used to build URL request.
-        :type params: dict
-        :return:
+        :param tp.AnyStr url: URL template.
+        :param dict params: parameters used to build URL request.
+        :return: request result as dict or list.
         :rtype: dict or list
         """
         params = params or dict()
@@ -138,12 +124,12 @@ class CryptoCmp:
         """
         Price conversion (one to many) from "fsym" currency to "tsyms" currencies.
 
-        >>> data = CryptoCmp.get_price(fsyms='BTC', tsyms=('ETH', 'USD', 'EUR'))
+        >>> data = CryptoCmpy.get_price(fsyms='BTC', tsyms=('ETH', 'USD', 'EUR'))
         >>> isinstance(data, dict)
         True
         >>> all((isinstance(v, float) for v in data.values()))
         True
-        >>> data = CryptoCmp.get_price(('BTC', 'ETH', 'XRP', 'ADA'), ('USD', 'EUR'))
+        >>> data = CryptoCmpy.get_price(('BTC', 'ETH', 'XRP', 'ADA'), ('USD', 'EUR'))
         >>> isinstance(data, dict)
         True
         >>> isinstance(data['total'], float)
@@ -172,7 +158,7 @@ class CryptoCmp:
         """
         Returns a dict of dicts containing all currencies metadata.
 
-        >>> data = CryptoCmp.get_coin_list()
+        >>> data = CryptoCmpy.get_coin_list()
         >>> isinstance(data, dict)
         True
 
@@ -207,7 +193,7 @@ class CryptoCmp:
         :return: all crypto exchanges with their metadata as dict.
         :rtype: dict
         """
-        raw = cls._query(ALL_EXCHANGES_URL)
+        raw = cls._query(_ALL_EXCHANGES_URL)
         if raw:
             if exchange:
                 raw = raw.get(exchange, raw)
@@ -331,3 +317,29 @@ class CryptoCmp:
         :return:
         """
         return cls._query(_GENERATE_AVG_URL, locals())
+
+    @classmethod
+    def get_exchanges(cls):
+        """
+        Return exchange list.
+
+        >>> CryptoCmpy.get_exchanges()
+
+        :return:
+        """
+        return cls._query(_ALL_EXCHANGES_URL)
+
+    # @classmethod
+    # def get_exchanges(cls):
+    #     """
+    #     Return exchange list.
+    #
+    #     >>> CryptoCmpy.get_exchanges()
+    #
+    #     :return:
+    #     """
+    #     return cls._query(_ALL_EXCHANGES_URL)
+
+
+if __name__ == '__main__':
+    print(sorted(CryptoCmpy.get_subs('ZEC')))
