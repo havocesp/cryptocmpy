@@ -1,22 +1,32 @@
 # -*- coding:utf-8 -*-
-from setuptools import setup, find_packages
+""" Setup file."""
 
-import cryptocmpy as ccmpy
+import os
 
-exclude = ['.idea*', 'build*', '{}.egg-info*'.format(__package__), 'dist*', 'venv*', 'doc*', 'lab*']
+import setuptools
 
-setup(
-    name=ccmpy.__package__,
-    version=ccmpy.__version__,
-    packages=find_packages(exclude=exclude),
-    url=ccmpy.__site__,
-    license=ccmpy.__license__,
-    packages_dir={'': ccmpy.__package__},
-    keywords=ccmpy.__keywords__,
-    author=ccmpy.__author__,
-    author_email=ccmpy.__email__,
-    long_description=ccmpy.__description__,
-    description=ccmpy.__description__,
+exclude = ['.mypy*', '.idea*', 'build*', '{}.egg-info*'.format(__package__), 'dist*', 'venv*', 'docs*', 'lab*']
+
+keywords = ['altcoins', 'altcoin', 'exchange', 'mining', 'cryptocompare', 'crypto', 'compare', 'api', 'wrapper']
+
+root_dir = os.path.dirname(__file__)
+readme_file = os.path.join(root_dir, 'README.md')
+long_description = str()
+if os.path.isfile(readme_file):
+    with open(readme_file) as fp:
+        long_description = fp.read()
+
+setuptools.setup(
+    name='cryptocmpy',
+    version='0.1.2',
+    packages=setuptools.find_packages(exclude=exclude),
+    url='github.com/havocesp/cryptocmpy',
+    license='UNLICENSE',
+    keywords=keywords,
+    author='Daniel J. Umpierrez',
+    author_email='umpierrez@pm.me',
+    long_description=long_description,
+    description='Python 3 "CryptoCompare" site API wrapper.',
     classifiers=[
         'Development Status :: 5 - Production',
         'License :: OSI Approved :: MIT License',

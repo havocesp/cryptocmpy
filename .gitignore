@@ -1,3 +1,7 @@
 /cryptocmpy.egg-info/
-/cryptocmpy/__pycache__/
 /.idea/
+build/
+dist/
+docs/
+.mypy_cache/
+/mkdocs.yml
