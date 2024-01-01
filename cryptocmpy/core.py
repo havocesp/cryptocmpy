@@ -13,6 +13,7 @@ import requests
 # MINING_CONTRACTS_URL = 'https://www.cryptocompare.com/api/data/miningcontracts/'
 # MINING_EQUIPMENT_URL = 'https://www.cryptocompare.com/api/data/miningequipment/'
 from model import Feeds, Categories, Coin, NewsItem
+from security import safe_requests
 
 _DEBUG = False
 
@@ -90,7 +91,7 @@ def _query(url, params=None) -> U[Dict, List]:
 
     url = _BASE.format(url)
 
-    response = requests.get(url, _params(params))
+    response = safe_requests.get(url, _params(params))
 
     if response.ok:
         try:

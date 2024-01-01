@@ -20,6 +20,7 @@ import simplejson
 import websocket
 from events import Events
 from six.moves.urllib.parse import urlencode
+from security import safe_requests
 
 logging.basicConfig()
 
@@ -75,7 +76,7 @@ class Request(object):
         if not 'User-Agent' in headers:
             headers.update({"User-Agent": "%s Python Client" % self.api.api_name})
         if method == "GET":
-            return requests.get(url, headers=headers)
+            return safe_requests.get(url, headers=headers)
         elif method == "POST":
             return requests.post(url, data=body, headers=headers)
         elif method == "DELETE":
