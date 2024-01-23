@@ -90,7 +90,7 @@ def _query(url, params=None) -> U[Dict, List]:
 
     url = _BASE.format(url)
 
-    response = requests.get(url, _params(params))
+    response = requests.get(url, _params(params), timeout=60)
 
     if response.ok:
         try:

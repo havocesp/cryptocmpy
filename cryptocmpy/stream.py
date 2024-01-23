@@ -75,13 +75,13 @@ class Request(object):
         if not 'User-Agent' in headers:
             headers.update({"User-Agent": "%s Python Client" % self.api.api_name})
         if method == "GET":
-            return requests.get(url, headers=headers)
+            return requests.get(url, headers=headers, timeout=60)
         elif method == "POST":
-            return requests.post(url, data=body, headers=headers)
+            return requests.post(url, data=body, headers=headers, timeout=60)
         elif method == "DELETE":
-            return requests.delete(url, data=body, headers=headers)
+            return requests.delete(url, data=body, headers=headers, timeout=60)
         elif method == "PUT":
-            return requests.put(url, data=body, headers=headers)
+            return requests.put(url, data=body, headers=headers, timeout=60)
 
 
 class WebSocket(Events):
