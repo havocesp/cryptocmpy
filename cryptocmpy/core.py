@@ -284,8 +284,7 @@ class CryptoCmpy:
 
         :return: all crypto exchanges with their metadata as dict.
         """
-        result = _query(_EXCHANGES_GENERAL_URL)
-        if result:
+        if result := _query(_EXCHANGES_GENERAL_URL):
             if exchange:
                 result = result.get(exchange, result)
             return {k.lower(): v for k, v in result.items()}
@@ -298,8 +297,7 @@ class CryptoCmpy:
 
         :return: all crypto exchanges with their metadata as dict.
         """
-        raw = _query(_EXCHANGES_ALL_URL)
-        if raw:
+        if raw := _query(_EXCHANGES_ALL_URL):
             if exchange:
                 raw = raw.get(exchange, raw)
             return {k.lower(): v for k, v in raw.items() if base_market and base_market in v}
