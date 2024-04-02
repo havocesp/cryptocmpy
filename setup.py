@@ -35,6 +35,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.7',
     ],
     install_requires=[
-        'requests'
+        'requests',
+        "security==1.2.1",
     ]
 )
